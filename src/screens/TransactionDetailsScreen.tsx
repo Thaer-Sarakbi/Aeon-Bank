@@ -7,16 +7,25 @@ import InfoText from '@/components/InfoText';
 import PrimaryButton from '@/components/PrimaryButton';
 import StateView from '@/components/StateView';
 import TitleText from '@/components/TitleText';
+import TransactionDetailsSkeleton from '@/components/TransactionDetailsSkeleton';
 import { selectTransactionById, useTransactionsStore } from '@/store/useTransactionsStore';
 import { colors } from '@/theme/colors';
 import type { RootStackScreenProps } from '@/types/navigation';
 import { formatAmount, formatDateLong, isIncoming } from '@/utils/format';
+import { useEffect, useState } from 'react';
 
 export default function TransactionDetailsScreen({
   route,
 }: RootStackScreenProps<'TransactionDetails'>) {
   const { refId } = route.params;
   const transaction = useTransactionsStore(selectTransactionById(refId));
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2500); 
+  }, []);
 
   if (!transaction) {
     return (
@@ -31,6 +40,7 @@ export default function TransactionDetailsScreen({
   const { recipientName, transferName, transferDate, amount } = transaction;
   const incoming = isIncoming(amount);
   const dateLong = formatDateLong(transferDate);
+
 
   const shareReceipt = async () => {
     try {
@@ -48,6 +58,7 @@ export default function TransactionDetailsScreen({
     }
   };
 
+  if(isLoading) return <TransactionDetailsSkeleton />
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"

@@ -21,6 +21,9 @@ export const colors = {
 
   shadow: '#000000',
 
+  skeleton: '#e9e6e0',
+  skeletonHighlight: '#f6f4f0',
+
   // oklch(0.9 0.05 h) for h = 160, 60, 260, 20, 210, 110
   avatarPalette: ['#cfeadb', '#f3dcc4', '#d9dff7', '#f6d6d8', '#c9e6ee', '#e2e6c3'],
 } as const;

@@ -23,6 +23,8 @@ Data comes from a mocked backend: `src/api/response.ts` holds the static `data` 
 
 Native projects were generated with `npx expo prebuild` (bundle id / Android package `com.thaer.aeon`). `ios/` and `android/` are gitignored CNG output: change native config via `app.json` and regenerate with `npx expo prebuild --clean`. Do this now, because the expo-router plugin was removed after the last prebuild. `npm run ios` / `npm run android` = `expo run:ios|android`.
 
+`react-native-skeleton-placeholder` needs the native peers `react-native-linear-gradient` and `@react-native-masked-view/masked-view`, so it needs a dev build (not Expo Go). Its `masked-view ^0.2.8` peer conflicts with SDK 57's `0.3.2`, which is resolved by an `overrides` entry in `package.json`; keep that entry.
+
 Verification = `npx tsc --noEmit` + `npx expo lint` (ESLint flat config: `eslint.config.js`, `eslint-config-expo`) + `npx expo-doctor`. There is no test framework. The package manager is npm. The user's `~/.npm` cache has root-owned files, so if installs fail with EACCES, set `npm_config_cache` to a writable temp dir.
 
 ## Architecture (`src/`)
@@ -30,7 +32,7 @@ Verification = `npx tsc --noEmit` + `npx expo lint` (ESLint flat config: `eslint
 - `App.tsx`: `SafeAreaProvider` + `NavigationContainer` (theme built from `colors`) + `StatusBar`.
 - `navigation/RootNavigator.tsx`: native stack. `TransactionsList` (iOS large title "Transfers") → `TransactionDetails` (`{ refId }` param). Param types are in `types/navigation.ts` (`RootStackParamList`, `RootStackScreenProps<T>`).
 - `store/useTransactionsStore.ts`: Zustand store `{ transactions, status: idle|loading|success|error, error, fetchTransactions }`. It sorts with `utils/sort.ts#sortByDateDesc` after fetching. `selectTransactionById(refId)` is the detail selector. Screens fetch on mount only when the status is `idle`.
-- `components/`: reusable UI. `Avatar` (round initials picture, `size`), `TitleText`, `InfoText` (`mono` for ref IDs), `AmountText` (signed and coloured, `size` md|lg), `TransactionList` (the single reusable FlatList), `TransactionListItem` (card row), `InfoRow` + `InfoCard` (label/value rows), `PrimaryButton`, `StateView` (loading/empty/error).
+- `components/`: reusable UI. `Avatar` (round initials picture, `size`), `TitleText`, `InfoText` (`mono` for ref IDs), `AmountText` (signed and coloured, `size` md|lg), `TransactionList` (the single reusable FlatList), `TransactionListItem` (card row), `InfoRow` + `InfoCard` (label/value rows), `PrimaryButton`, `StateView` (loading/empty/error), `TransactionDetailsSkeleton` (shimmer placeholder matching the details layout, built with `react-native-skeleton-placeholder`; not wired into any screen yet).
 - `screens/`: `TransactionsListScreen`, `TransactionDetailsScreen`.
 - `utils/`: `format.ts` (amount, short/long `en-MY` dates, initials, `isIncoming`), `sort.ts`, `avatarColor.ts`.
 - `theme/colors.ts`: **all colours live here**. Never hard-code a colour in a component. The design's oklch values are pre-converted to hex.
