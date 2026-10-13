@@ -38,6 +38,12 @@
     ],
     "experiments": {
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1f6c2231-fa3e-4d96-8ad1-28d585f488b0"
+      }
+    },
+    "owner": "thaer"
   }
 }

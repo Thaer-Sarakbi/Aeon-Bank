@@ -2,6 +2,7 @@ import { Alert, ScrollView, Share, StyleSheet, View } from 'react-native';
 
 import AmountText from '@/components/AmountText';
 import Avatar from '@/components/Avatar';
+import CopyButton from '@/components/CopyButton';
 import InfoCard from '@/components/InfoCard';
 import InfoText from '@/components/InfoText';
 import PrimaryButton from '@/components/PrimaryButton';
@@ -77,7 +78,15 @@ export default function TransactionDetailsScreen({
 
       <InfoCard
         rows={[
-          { label: 'Reference ID', value: <InfoText mono style={styles.refValue}>{refId}</InfoText> },
+          {
+            label: 'Reference ID',
+            value: (
+              <View style={styles.refRow}>
+                <InfoText mono selectable style={styles.refValue}>{refId}</InfoText>
+                <CopyButton value={refId} accessibilityLabel="Copy reference ID" />
+              </View>
+            ),
+          },
           { label: 'Transfer date', value: dateLong },
           { label: incoming ? 'Sender' : 'Recipient', value: recipientName },
           { label: 'Transfer name', value: transferName },
@@ -112,7 +121,14 @@ const createStyles = (
   transferName: {
     fontWeight: '500',
   },
+  refRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexShrink: 1,
+    gap: spacing.space_8,
+  },
   refValue: {
+    flexShrink: 1,
     fontSize: 13,
     color: colors.text,
     fontWeight: 'bold'
