@@ -1,5 +1,13 @@
-import { ScrollView, StyleSheet } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { useEffect } from 'react';
+import { ScrollView, StyleSheet, View, useWindowDimensions, type ViewStyle } from 'react-native';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  type SharedValue,
+} from 'react-native-reanimated';
 
 import { colors } from '@/theme/colors';
 
@@ -10,46 +18,68 @@ const INFO_ROWS = [
   { label: 98, value: 124 },
 ];
 
+const SHIMMER_GRADIENT = `linear-gradient(90deg, ${colors.skeleton}, ${colors.skeletonHighlight}, ${colors.skeleton})`;
+
+type BoneProps = {
+  progress: SharedValue<number>;
+  width?: ViewStyle['width'];
+  height: number;
+  radius?: number;
+  style?: ViewStyle;
+};
+
+/** A single placeholder block with a highlight sweeping across it. */
+function Bone({ progress, width, height, radius = 6, style }: BoneProps) {
+  const { width: screenWidth } = useWindowDimensions();
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: -screenWidth + progress.value * screenWidth * 2 }],
+  }));
+
+  return (
+    <View style={[styles.bone, { width, height, borderRadius: radius }, style]}>
+      <Animated.View style={[styles.shimmer, { width: screenWidth }, shimmerStyle]} />
+    </View>
+  );
+}
+
 /** Shimmering placeholder that mirrors the TransactionDetails layout while data is fetched. */
 export default function TransactionDetailsSkeleton() {
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    progress.value = withRepeat(
+      withTiming(1, { duration: 1200, easing: Easing.inOut(Easing.ease) }),
+      -1,
+    );
+  }, [progress]);
+
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.content}
       scrollEnabled={false}
       accessibilityLabel="Loading transfer details">
-      <SkeletonPlaceholder
-        backgroundColor={colors.skeleton}
-        highlightColor={colors.skeletonHighlight}
-        borderRadius={6}>
-        <SkeletonPlaceholder.Item>
-          {/* Header: avatar, direction, amount, transfer name */}
-          <SkeletonPlaceholder.Item alignItems="center" gap={8} paddingTop={12} paddingBottom={24}>
-            <SkeletonPlaceholder.Item width={64} height={64} borderRadius={32} />
-            <SkeletonPlaceholder.Item width={160} height={15} marginTop={4} />
-            <SkeletonPlaceholder.Item width={190} height={38} borderRadius={8} />
-            <SkeletonPlaceholder.Item width={120} height={15} />
-          </SkeletonPlaceholder.Item>
+      {/* Header: avatar, direction, amount, transfer name */}
+      <View style={styles.header}>
+        <Bone progress={progress} width={64} height={64} radius={32} />
+        <Bone progress={progress} width={160} height={15} style={styles.direction} />
+        <Bone progress={progress} width={190} height={38} radius={8} />
+        <Bone progress={progress} width={120} height={15} />
+      </View>
 
-          {/* Info card */}
-          <SkeletonPlaceholder.Item borderRadius={18} paddingVertical={4} paddingHorizontal={16}>
-            {INFO_ROWS.map((row, index) => (
-              <SkeletonPlaceholder.Item
-                key={index}
-                flexDirection="row"
-                justifyContent="space-between"
-                alignItems="center"
-                paddingVertical={14}>
-                <SkeletonPlaceholder.Item width={row.label} height={14} />
-                <SkeletonPlaceholder.Item width={row.value} height={14} />
-              </SkeletonPlaceholder.Item>
-            ))}
-          </SkeletonPlaceholder.Item>
+      {/* Info card */}
+      <View style={styles.card}>
+        {INFO_ROWS.map((row, index) => (
+          <View key={index} style={styles.row}>
+            <Bone progress={progress} width={row.label} height={14} />
+            <Bone progress={progress} width={row.value} height={14} />
+          </View>
+        ))}
+      </View>
 
-          {/* Share button */}
-          <SkeletonPlaceholder.Item height={52} borderRadius={26} marginTop={20} />
-        </SkeletonPlaceholder.Item>
-      </SkeletonPlaceholder>
+      {/* Share button */}
+      <Bone progress={progress} height={52} radius={26} style={styles.button} />
     </ScrollView>
   );
 }
@@ -59,5 +89,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 30,
+  },
+  bone: {
+    backgroundColor: colors.skeleton,
+    overflow: 'hidden',
+  },
+  shimmer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    experimental_backgroundImage: SHIMMER_GRADIENT,
+  },
+  header: {
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 12,
+    paddingBottom: 24,
+  },
+  direction: {
+    marginTop: 4,
+  },
+  card: {
+    borderRadius: 18,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+  },
+  button: {
+    marginTop: 20,
   },
 });

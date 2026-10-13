@@ -3,7 +3,6 @@
   "main": "index.ts",
   "version": "1.0.0",
   "dependencies": {
-    "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "^7.5.0",
     "@react-navigation/native-stack": "^7.20.0",
     "expo": "~57.0.27",
@@ -20,11 +19,9 @@
     "react-dom": "19.2.3",
     "react-native": "0.86.3",
     "react-native-gesture-handler": "~2.32.0",
-    "react-native-linear-gradient": "^2.8.3",
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
-    "react-native-skeleton-placeholder": "^5.2.4",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.10.1",
     "zustand": "^5.0.15"
@@ -42,10 +39,5 @@
     "web": "expo start --web",
     "lint": "expo lint"
   },
-  "private": true,
-  "overrides": {
-    "react-native-skeleton-placeholder": {
-      "@react-native-masked-view/masked-view": "$@react-native-masked-view/masked-view"
-    }
-  }
+  "private": true
 }
