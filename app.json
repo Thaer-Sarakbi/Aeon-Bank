@@ -9,7 +9,22 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.thaer.aeon"
+      "bundleIdentifier": "com.thaer.aeon",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "activator",
+          "cydia",
+          "filza",
+          "sileo",
+          "undecimus",
+          "zbra",
+          "anygofree",
+          "xgpspro",
+          "acc.GpsManager",
+          "LocationSimulation",
+          "locationfakelocation"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +45,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#ef23b8",
-          "image": "./assets/icons/splash-icon.png",
+          "image": "./assets/icons/aeon.png",
           "imageWidth": 76
         }
       ],
