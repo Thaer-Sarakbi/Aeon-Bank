@@ -9,7 +9,8 @@ import StateView from '@/components/StateView';
 import TitleText from '@/components/TitleText';
 import TransactionDetailsSkeleton from '@/components/TransactionDetailsSkeleton';
 import { selectTransactionById, useTransactionsStore } from '@/store/useTransactionsStore';
-import { colors } from '@/theme/colors';
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 import type { RootStackScreenProps } from '@/types/navigation';
 import { formatAmount, formatDateLong, isIncoming } from '@/utils/format';
 import { useEffect, useState } from 'react';
@@ -20,6 +21,8 @@ export default function TransactionDetailsScreen({
   const { refId } = route.params;
   const transaction = useTransactionsStore(selectTransactionById(refId));
   const [isLoading, setIsLoading] = useState(true);
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
 
   useEffect(() => {
     setTimeout(() => {
@@ -86,21 +89,24 @@ export default function TransactionDetailsScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) => StyleSheet.create({
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 30,
+    paddingHorizontal: spacing.space_20,
+    paddingTop: spacing.space_16,
+    paddingBottom: spacing.space_30,
   },
   header: {
     alignItems: 'center',
-    gap: 8,
-    paddingTop: 12,
-    paddingBottom: 24,
+    gap: spacing.space_8,
+    paddingTop: spacing.space_12,
+    paddingBottom: spacing.space_24,
   },
   direction: {
     fontSize: 15,
-    marginTop: 4,
+    marginTop: spacing.space_4,
     textAlign: 'center',
   },
   transferName: {
@@ -109,8 +115,9 @@ const styles = StyleSheet.create({
   refValue: {
     fontSize: 13,
     color: colors.text,
+    fontWeight: 'bold'
   },
   share: {
-    marginTop: 20,
+    marginTop: spacing.space_20,
   },
 });

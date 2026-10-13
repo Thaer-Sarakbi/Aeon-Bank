@@ -10,6 +10,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { colors } from '@/theme/colors';
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 
 const INFO_ROWS = [
   { label: 84, value: 96 },
@@ -31,6 +33,8 @@ type BoneProps = {
 /** A single placeholder block with a highlight sweeping across it. */
 function Bone({ progress, width, height, radius = 6, style }: BoneProps) {
   const { width: screenWidth } = useWindowDimensions();
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
 
   const shimmerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: -screenWidth + progress.value * screenWidth * 2 }],
@@ -45,6 +49,9 @@ function Bone({ progress, width, height, radius = 6, style }: BoneProps) {
 
 /** Shimmering placeholder that mirrors the TransactionDetails layout while data is fetched. */
 export default function TransactionDetailsSkeleton() {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+
   const progress = useSharedValue(0);
 
   useEffect(() => {
@@ -84,11 +91,14 @@ export default function TransactionDetailsSkeleton() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) =>  StyleSheet.create({
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 30,
+    paddingHorizontal: spacing.space_20,
+    paddingTop: spacing.space_16,
+    paddingBottom: spacing.space_30,
   },
   bone: {
     backgroundColor: colors.skeleton,
@@ -103,25 +113,25 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    gap: 8,
-    paddingTop: 12,
-    paddingBottom: 24,
+    gap: spacing.space_8,
+    paddingTop: spacing.space_12,
+    paddingBottom: spacing.space_24,
   },
   direction: {
-    marginTop: 4,
+    marginTop: spacing.space_4,
   },
   card: {
     borderRadius: 18,
-    paddingVertical: 4,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.space_4,
+    paddingHorizontal: spacing.space_16,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: spacing.space_14,
   },
   button: {
-    marginTop: 20,
+    marginTop: spacing.space_20,
   },
 });

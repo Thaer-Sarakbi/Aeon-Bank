@@ -2,12 +2,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import TransactionDetailsScreen from '@/screens/TransactionDetailsScreen';
 import TransactionsListScreen from '@/screens/TransactionsListScreen';
-import { colors } from '@/theme/colors';
+import { useAppTheme } from '@/theme/useAppTheme';
 import type { RootStackParamList } from '@/types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootNavigator() {
+  const { colors } = useAppTheme();
+  
   return (
     <Stack.Navigator
       screenOptions={{

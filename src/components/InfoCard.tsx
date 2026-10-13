@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
 
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 import InfoRow, { type InfoRowProps } from './InfoRow';
 
 interface InfoCardProps {
@@ -10,6 +11,9 @@ interface InfoCardProps {
 
 /** Rounded panel of label/value rows, with dividers between them. */
 export default function InfoCard({ rows }: InfoCardProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+
   return (
     <View style={styles.card}>
       {rows.map((row, index) => (
@@ -19,11 +23,14 @@ export default function InfoCard({ rows }: InfoCardProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+    colors: ReturnType<typeof useAppTheme>['colors'],
+    space: ReturnType<typeof useAppTheme>['SPACING']
+  ) => StyleSheet.create({
   card: {
     borderRadius: 18,
     backgroundColor: colors.surfaceMuted,
-    paddingVertical: 4,
-    paddingHorizontal: 16,
+    paddingVertical: space.space_4,
+    paddingHorizontal: space.space_16,
   },
 });

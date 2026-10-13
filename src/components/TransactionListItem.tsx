@@ -1,9 +1,10 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
 import type { Transaction } from '@/types/transaction';
 import { formatDateShort } from '@/utils/format';
 
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 import AmountText from './AmountText';
 import Avatar from './Avatar';
 import InfoText from './InfoText';
@@ -16,6 +17,8 @@ interface TransactionListItemProps {
 
 export default function TransactionListItem({ transaction, onPress }: TransactionListItemProps) {
   const { recipientName, transferName, transferDate, amount, refId } = transaction;
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
 
   return (
     <Pressable
@@ -43,12 +46,15 @@ export default function TransactionListItem({ transaction, onPress }: Transactio
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) => StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
-    padding: 14,
+    gap: spacing.space_12,
+    padding: spacing.space_14,
     borderRadius: 18,
     backgroundColor: colors.surface,
     shadowColor: colors.shadow,
@@ -74,6 +80,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   ref: {
-    marginTop: 2,
+    marginTop: spacing.space_2,
   },
 });

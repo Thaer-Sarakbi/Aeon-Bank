@@ -1,9 +1,10 @@
 import type { ReactElement } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
 import type { Transaction } from '@/types/transaction';
 
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 import TransactionListItem from './TransactionListItem';
 
 interface TransactionListProps {
@@ -22,6 +23,9 @@ export default function TransactionList({
   onRefresh,
   ListEmptyComponent,
 }: TransactionListProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+  
   return (
     <FlatList
       data={data}
@@ -41,19 +45,25 @@ export default function TransactionList({
 }
 
 function Separator() {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+
   return <View style={styles.separator} />;
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) => StyleSheet.create({
   content: {
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 34,
+    paddingHorizontal: spacing.space_20,
+    paddingTop: spacing.space_8,
+    paddingBottom: spacing.space_34,
   },
   emptyContent: {
     flexGrow: 1,
   },
   separator: {
-    height: 8,
+    height: spacing.space_8,
   },
 });

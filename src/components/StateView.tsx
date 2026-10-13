@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
-
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 import InfoText from './InfoText';
 import PrimaryButton from './PrimaryButton';
 import TitleText from './TitleText';
@@ -12,6 +12,9 @@ type StateViewProps =
 
 /** Full-screen placeholder for loading, empty and error states. */
 export default function StateView(props: StateViewProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+
   if (props.variant === 'loading') {
     return (
       <View style={styles.container} accessibilityLabel="Loading">
@@ -33,13 +36,16 @@ export default function StateView(props: StateViewProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) =>  StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 32,
-    gap: 8,
+    paddingHorizontal: spacing.space_32,
+    gap: spacing.space_8,
   },
   title: {
     fontSize: 17,
@@ -50,6 +56,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    marginTop: 16,
+    marginTop: spacing.space_16,
   },
 });

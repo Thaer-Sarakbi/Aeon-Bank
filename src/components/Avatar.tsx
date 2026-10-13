@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors } from '@/theme/colors';
+import { useAppTheme } from '@/theme/useAppTheme';
 import { getAvatarColor } from '@/utils/avatarColor';
 import { getInitials } from '@/utils/format';
 
@@ -11,6 +11,9 @@ interface AvatarProps {
 
 /** Round picture showing the person's initials on a pastel background. */
 export default function Avatar({ name, size = 42 }: AvatarProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors);
+
   return (
     <View
       style={[
@@ -29,7 +32,9 @@ export default function Avatar({ name, size = 42 }: AvatarProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+    colors: ReturnType<typeof useAppTheme>['colors']
+  ) => StyleSheet.create({
   circle: {
     alignItems: 'center',
     justifyContent: 'center',

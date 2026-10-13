@@ -1,6 +1,6 @@
 import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
 
-import { colors } from '@/theme/colors';
+import { useAppTheme } from '@/theme/useAppTheme';
 
 interface InfoTextProps extends TextProps {
   /** Monospace, subtle style for reference IDs. */
@@ -9,10 +9,15 @@ interface InfoTextProps extends TextProps {
 
 /** Secondary, muted text (dates, labels, descriptions). */
 export default function InfoText({ mono = false, style, ...rest }: InfoTextProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors);
+  
   return <Text {...rest} style={[styles.info, mono && styles.mono, style]} />;
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors']
+) => StyleSheet.create({
   info: {
     fontSize: 13,
     color: colors.textMuted,

@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors } from '@/theme/colors';
+import { SPACING } from '@/theme/spacing';
+import { useAppTheme } from '@/theme/useAppTheme';
 
 interface PrimaryButtonProps {
   title: string;
@@ -9,6 +10,9 @@ interface PrimaryButtonProps {
 }
 
 export default function PrimaryButton({ title, onPress, style }: PrimaryButtonProps) {
+  const { colors } = useAppTheme();
+  const styles = createStyles(colors, SPACING);
+
   return (
     <Pressable
       onPress={onPress}
@@ -19,11 +23,14 @@ export default function PrimaryButton({ title, onPress, style }: PrimaryButtonPr
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (
+  colors: ReturnType<typeof useAppTheme>['colors'],
+  spacing: ReturnType<typeof useAppTheme>['SPACING']
+) => StyleSheet.create({
   button: {
-    height: 52,
+    height: spacing.space_52,
     borderRadius: 26,
-    paddingHorizontal: 28,
+    paddingHorizontal: spacing.space_28,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary,
