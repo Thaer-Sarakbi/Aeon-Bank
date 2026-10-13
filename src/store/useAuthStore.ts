@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { fetchAuthToken } from '@/api/authApi';
-import { checkDeviceIntegrity } from '@/security/deviceIntegrity';
 
 import { secureJSONStorage } from './secureStorage';
 import type { LoadStatus } from './useTransactionsStore';
@@ -25,10 +24,6 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       fetchToken: async () => {
         if (get().status === 'loading') return;
-        if (checkDeviceIntegrity().compromised) {
-          set({ token: null, status: 'error', error: 'This device is rooted or jailbroken.' });
-          return;
-        }
         set({ status: 'loading', error: null });
         try {
           const token = await fetchAuthToken();
@@ -48,8 +43,8 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({ token: state.token }),
       merge: (persisted, current) => {
         const token = (persisted as Partial<AuthState> | undefined)?.token ?? null;
-        // Never restore a token onto a compromised device, and don't clobber a newer in-memory token.
-        if (current.token || !token || checkDeviceIntegrity().compromised) return current;
+        // Don't clobber a newer in-memory token.
+        if (current.token || !token) return current;
         return { ...current, token, status: 'success' };
       },
     },
